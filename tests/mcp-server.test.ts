@@ -186,7 +186,7 @@ describe("MCP Server", () => {
     });
 
     it("should have correct package name", () => {
-      expect(pkg.name).toBe("@engineering-platform/mcp-server");
+      expect(pkg.name).toBe("@engineering-platform/mcp");
     });
 
     it("should be ES module", () => {

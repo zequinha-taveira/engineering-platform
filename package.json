@@ -1,27 +1,44 @@
 {
-  "name": "@engineering-platform/mcp-server",
+  "name": "@engineering-platform/mcp",
   "version": "1.0.0",
   "description": "MCP Server for Engineering Platform",
-  "main": "mcp/dist/index.js",
+  "main": "mcp/dist/cli.js",
+  "bin": {
+    "engineering-platform-mcp": "mcp/dist/cli.js"
+  },
+  "files": [
+    "mcp/dist/**/*",
+    "architecture/",
+    "constitution/",
+    "standards/",
+    "specifications/",
+    "contracts/",
+    "prompts/",
+    "agents/",
+    "knowledge/"
+  ],
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
+    "start": "node mcp/dist/cli.js",
+    "dev": "ts-node mcp/src/cli.ts",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "mcp",
-    "engineering-platform"
+    "engineering-platform",
+    "ai",
+    "agents"
   ],
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.29.0",
-    "@types/node": "^26.1.1",
-    "typescript": "^7.0.2"
+    "@modelcontextprotocol/sdk": "^1.29.0"
   },
   "devDependencies": {
+    "@types/node": "^26.1.1",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.10"
   }
 }
