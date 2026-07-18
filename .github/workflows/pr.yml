@@ -1,0 +1,19 @@
+name: PR
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Conventional Commit
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+          if ! echo "$TITLE" | grep -qE '^(feat|fix|docs|chore|ci|refactor|test|perf|style|build)(\(.+\))?!?: .+'; then
+            echo "ERROR: PR title must follow Conventional Commits: type(scope): description"
+            echo "Examples: feat(mcp): add new tool, fix(ci): resolve yaml error"
+            exit 1
+          fi
+          echo "Title follows Conventional Commits"
