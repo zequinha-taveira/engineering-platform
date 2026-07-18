@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "rootDir": "mcp/src",
+    "outDir": "mcp/dist",
+    "module": "nodenext",
+    "target": "es2022",
+    "types": ["node"],
+    "sourceMap": true,
+    "declaration": true,
+    "strict": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "moduleResolution": "nodenext",
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+  },
+  "include": ["mcp/src/**/*"]
+}

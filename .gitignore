@@ -4,3 +4,13 @@
 .context/runtime/
 .context/**/archive/
 
+# dependencies
+node_modules/
+
+# build output
+mcp/dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
