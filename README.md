@@ -240,10 +240,34 @@ Exemplos:
 
 Servidor TypeScript que expõe a plataforma via [Model Context Protocol](https://modelcontextprotocol.io), permitindo que agentes de IA acessem recursos e executem ferramentas diretamente.
 
+### Instalação e Uso
+
 ```bash
-npm install
-npm run build
+# Via npx (recomendado)
+npx -y @engineering-platform/mcp
+
+# Ou instalar globalmente
+npm install -g @engineering-platform/mcp
+engineering-platform-mcp
+
+# Ou localmente no projeto
+npm install @engineering-platform/mcp
 npm start
+```
+
+### Configuração MCP
+
+Adicione ao MCP config do seu agente de IA (Cursor, Claude, Windsurf, etc.):
+
+```json
+{
+  "mcpServers": {
+    "engineering-platform": {
+      "command": "npx",
+      "args": ["-y", "@engineering-platform/mcp"]
+    }
+  }
+}
 ```
 
 ### Resources (8)
@@ -268,20 +292,6 @@ npm start
 | `generate_prompt` | Gerar prompt a partir de template | `template`, `context?` |
 | `review_code` | Revisar código contra padrões | `code`, `language?` |
 | `validate_project` | Validar estrutura do projeto | — |
-
-### Configuração
-
-Para utilizar com seu agente de IA, adicione ao MCP config:
-
-```json
-{
-  "mcpServers": {
-    "engineering-platform": {
-      "command": "node",
-      "args": ["mcp/dist/index.js"]
-    }
-  }
-}
 
 ---
 
