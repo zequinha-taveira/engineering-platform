@@ -236,27 +236,52 @@ Exemplos:
 
 ---
 
-## MCP
+## MCP Server
 
-O servidor MCP fornece contexto e ferramentas para agentes de IA.
+Servidor TypeScript que expõe a plataforma via [Model Context Protocol](https://modelcontextprotocol.io), permitindo que agentes de IA acessem recursos e executem ferramentas diretamente.
 
-Exemplos:
+```bash
+npm install
+npm run build
+npm start
+```
 
-Resources
+### Resources (8)
 
-* arquitetura
-* especificações
-* contratos
-* padrões
+| Resource | Descrição |
+|----------|-----------|
+| `platform://architecture` | Documentação de arquitetura |
+| `platform://constitution` | Princípios fundamentais |
+| `platform://standards` | Padrões técnicos |
+| `platform://specifications` | Especificações de funcionalidades |
+| `platform://contracts` | Contratos de interface |
+| `platform://prompts` | Templates de prompts |
+| `platform://agents` | Catálogo de agentes |
+| `platform://knowledge` | Base de conhecimento |
 
-Tools
+### Tools (5)
 
-* create_spec
-* create_plan
-* create_tasks
-* generate_prompt
-* review_code
-* validate_project
+| Tool | Descrição | Parâmetros |
+|------|-----------|------------|
+| `create_spec` | Criar especificação | `name`, `description?` |
+| `create_plan` | Criar plano de desenvolvimento | `feature`, `phases?` |
+| `generate_prompt` | Gerar prompt a partir de template | `template`, `context?` |
+| `review_code` | Revisar código contra padrões | `code`, `language?` |
+| `validate_project` | Validar estrutura do projeto | — |
+
+### Configuração
+
+Para utilizar com seu agente de IA, adicione ao MCP config:
+
+```json
+{
+  "mcpServers": {
+    "engineering-platform": {
+      "command": "node",
+      "args": ["mcp/dist/index.js"]
+    }
+  }
+}
 
 ---
 
