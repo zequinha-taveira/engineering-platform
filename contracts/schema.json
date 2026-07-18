@@ -1,0 +1,175 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Module Contract Schema",
+  "description": "Schema for validating module contracts in the Engineering Platform",
+  "type": "object",
+  "required": ["identity", "interfaces"],
+  "properties": {
+    "identity": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Module name in kebab-case"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Semantic version (major.minor.patch)"
+        },
+        "owner": {
+          "type": "string",
+          "description": "Team or person responsible"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "deprecated", "draft"],
+          "default": "draft",
+          "description": "Contract status"
+        }
+      }
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the module purpose"
+    },
+    "interfaces": {
+      "type": "object",
+      "properties": {
+        "api": {
+          "type": "array",
+          "description": "Public API methods",
+          "items": {
+            "type": "object",
+            "required": ["name", "method"],
+            "properties": {
+              "name": { "type": "string" },
+              "method": { "type": "string", "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"] },
+              "path": { "type": "string" },
+              "description": { "type": "string" },
+              "parameters": { "type": "array" },
+              "returns": { "type": "object" }
+            }
+          }
+        },
+        "events": {
+          "type": "object",
+          "properties": {
+            "emits": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "payload": { "type": "object" },
+                  "description": { "type": "string" }
+                }
+              }
+            },
+            "consumes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "source": { "type": "string" },
+                  "description": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "internal": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "module": { "type": "string" },
+              "version": { "type": "string" },
+              "required": { "type": "boolean", "default": true }
+            }
+          }
+        },
+        "external": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "service": { "type": "string" },
+              "purpose": { "type": "string" },
+              "fallback": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "technical": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "business": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "security": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "performance": {
+      "type": "object",
+      "properties": {
+        "latency": { "type": "string" },
+        "throughput": { "type": "string" },
+        "availability": { "type": "string" }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "properties": {
+        "coverage": {
+          "type": "object",
+          "properties": {
+            "unit": { "type": "string" },
+            "integration": { "type": "string" }
+          }
+        },
+        "criticalScenarios": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "monitoring": {
+      "type": "object",
+      "properties": {
+        "metrics": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "alerts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "metric": { "type": "string" },
+              "threshold": { "type": "string" },
+              "action": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
