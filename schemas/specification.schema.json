@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Specification Schema",
+  "description": "Schema for validating feature specifications in the Engineering Platform",
+  "type": "object",
+  "required": ["name", "overview", "requirements"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Feature name"
+    },
+    "overview": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Brief description of the feature and its purpose"
+    },
+    "objectives": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "List of objectives for the feature"
+    },
+    "requirements": {
+      "type": "object",
+      "properties": {
+        "functional": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "description", "priority"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^FR-\\d+$",
+                "description": "Functional requirement ID (e.g., FR-01)"
+              },
+              "description": { "type": "string" },
+              "priority": {
+                "type": "string",
+                "enum": ["alta", "média", "baixa", "high", "medium", "low"]
+              }
+            }
+          }
+        },
+        "nonFunctional": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "description", "criterion"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^NFR-\\d+$",
+                "description": "Non-functional requirement ID (e.g., NFR-01)"
+              },
+              "description": { "type": "string" },
+              "criterion": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "userStories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["persona", "action", "benefit"],
+        "properties": {
+          "persona": { "type": "string" },
+          "action": { "type": "string" },
+          "benefit": { "type": "string" }
+        }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["description", "probability", "impact"],
+        "properties": {
+          "description": { "type": "string" },
+          "probability": { "type": "string", "enum": ["alta", "média", "baixa", "high", "medium", "low"] },
+          "impact": { "type": "string", "enum": ["alto", "médio", "baixo", "high", "medium", "low"] },
+          "mitigation": { "type": "string" }
+        }
+      }
+    },
+    "approval": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "status"],
+        "properties": {
+          "role": { "type": "string" },
+          "approver": { "type": "string" },
+          "date": { "type": "string", "format": "date" },
+          "status": { "type": "string", "enum": ["pending", "approved", "rejected"] }
+        }
+      }
+    }
+  }
+}

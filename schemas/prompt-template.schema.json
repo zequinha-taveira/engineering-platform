@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Prompt Template Schema",
+  "description": "Schema for validating prompt templates in the Engineering Platform",
+  "type": "object",
+  "required": ["name", "category", "template"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Template name"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["specification", "code-review", "architecture", "debugging", "documentation", "testing", "refactoring"],
+      "description": "Prompt category"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of when to use this template"
+    },
+    "template": {
+      "type": "string",
+      "minLength": 50,
+      "description": "The prompt template content with {{PLACEHOLDER}} variables"
+    },
+    "variables": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Z_]+$",
+            "description": "Variable name in UPPER_SNAKE_CASE (used as {{NAME}} in template)"
+          },
+          "description": { "type": "string" },
+          "required": { "type": "boolean", "default": true },
+          "default": { "type": "string" },
+          "examples": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "requiredResources": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Platform resources needed (e.g., 'standards/coding', 'contracts')"
+        },
+        "agents": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Agents that typically use this template"
+        }
+      }
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["input", "output"],
+        "properties": {
+          "input": {
+            "type": "object",
+            "description": "Variable values for this example"
+          },
+          "output": {
+            "type": "string",
+            "description": "The generated prompt for this example"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Architecture Decision Record Schema",
+  "description": "Schema for validating ADRs in the Engineering Platform",
+  "type": "object",
+  "required": ["number", "title", "status", "date", "context", "decision"],
+  "properties": {
+    "number": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "ADR sequential number"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 5,
+      "description": "Decision title"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["proposed", "accepted", "rejected", "deprecated", "superseded"],
+      "description": "Current decision status"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Decision date (YYYY-MM-DD)"
+    },
+    "context": {
+      "type": "object",
+      "required": ["problem"],
+      "properties": {
+        "problem": { "type": "string", "minLength": 10 },
+        "constraints": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "drivers": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "required": ["chosen"],
+      "properties": {
+        "chosen": {
+          "type": "string",
+          "description": "The chosen option"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this option was chosen"
+        },
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "pros": { "type": "array", "items": { "type": "string" } },
+              "cons": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "consequences": {
+      "type": "object",
+      "properties": {
+        "positive": { "type": "array", "items": { "type": "string" } },
+        "negative": { "type": "array", "items": { "type": "string" } },
+        "neutral": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "supersedes": {
+      "type": "integer",
+      "description": "ADR number this decision supersedes"
+    },
+    "references": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

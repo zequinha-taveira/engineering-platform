@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Standard Schema",
+  "description": "Schema for validating technical standards in the Engineering Platform",
+  "type": "object",
+  "required": ["name", "category", "rules"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Standard name"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["coding", "api", "testing", "security", "documentation"],
+      "description": "Standard category"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Standard version"
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "severity"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Z]+-\\d+$",
+            "description": "Rule ID (e.g., CODE-01, API-03, SEC-05)"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 5,
+            "description": "Rule description"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["error", "warning", "info"],
+            "description": "Violation severity"
+          },
+          "rationale": {
+            "type": "string",
+            "description": "Why this rule exists"
+          },
+          "examples": {
+            "type": "object",
+            "properties": {
+              "good": { "type": "string" },
+              "bad": { "type": "string" }
+            }
+          },
+          "automated": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether this rule can be checked automatically"
+          }
+        }
+      }
+    },
+    "checklist": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Checklist items for manual review"
+    },
+    "references": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "External references and links"
+    }
+  }
+}

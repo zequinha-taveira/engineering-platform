@@ -2,6 +2,20 @@
 
 > Identidade técnica do projeto. Todo desenvolvimento deve seguir estes princípios.
 
+**Versão:** 1.0.0
+**Última atualização:** 2026-07-19
+**Status:** Ativa
+
+---
+
+## Changelog
+
+| Versão | Data | Autor | Descrição |
+|--------|------|-------|-----------|
+| 1.0.0 | 2026-07-19 | @engineering-platform | Versão inicial com princípios, governança, qualidade e segurança |
+
+---
+
 ## 1. Princípios Fundamentais
 
 ### Engenharia Primeiro
@@ -31,10 +45,14 @@ Sempre que possível, processos repetitivos devem ser automatizados.
 - Revisão verifica: qualidade, segurança, padrões, testes
 - Approvals são registrados no commit
 
-###版本控制
+### Versionamento
 - Commits seguem Conventional Commits
 - Branches seguem Git Flow ou Trunk-Based
 - Tags marcam releases
+- A Constitution segue versionamento semântico (MAJOR.MINOR.PATCH)
+  - **MAJOR:** Mudanças nos princípios fundamentais
+  - **MINOR:** Novos padrões ou seções
+  - **PATCH:** Correções e esclarecimentos
 
 ## 3. Requisitos de Qualidade
 
@@ -88,8 +106,9 @@ engineering-platform/
 ├── mcp/                # Servidor MCP
 ├── docs/               # Documentação
 ├── examples/           # Exemplos
-├── schemas/            # Schemas e formatos
-├── tools/              # Ferramentas
+├── schemas/            # Schemas de validação
+├── tools/              # Ferramentas CLI
+├── security/           # Segurança
 └── tests/              # Testes
 ```
 
@@ -109,3 +128,7 @@ Ideia → Plano → Especificação → Arquitetura → Contratos → Prompts �
 - Maior qualidade de código
 - Rastreabilidade total
 - Governança técnica efetiva
+
+## 8. Validação da Constitution
+
+A aderência à Constitution pode ser verificada automaticamente usando o schema em `schemas/constitution.schema.json`. Projetos que usam a plataforma devem validar seus artefatos periodicamente.

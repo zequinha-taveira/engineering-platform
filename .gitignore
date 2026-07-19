@@ -1,16 +1,120 @@
+# ===================================
 # dotcontext runtime state
+# ===================================
 .context/plans/
 .context/cache/semantic/
 .context/runtime/
 .context/**/archive/
 
-# dependencies
+# ===================================
+# Dependencies
+# ===================================
 node_modules/
 
-# build output
+# ===================================
+# Build output
+# ===================================
 mcp/dist/
+dist/
+*.tsbuildinfo
 
-# OS
+# ===================================
+# OS / IDE
+# ===================================
 .DS_Store
 Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+.vscode/settings.json
+.idea/
 
+# ===================================
+# 🔒 SECURITY — Secrets & Credentials
+# ===================================
+
+# Environment files (may contain API keys, DB passwords, tokens)
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Private keys & certificates
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.crt
+*.cer
+*.der
+
+# SSH keys
+id_rsa
+id_ed25519
+*.pub
+known_hosts
+
+# AWS
+.aws/
+aws-credentials
+*.aws
+
+# GCP / Firebase
+*.json.enc
+serviceAccountKey.json
+firebase-adminsdk*.json
+gcloud-service-key.json
+
+# Azure
+.azure/
+azure-credentials
+
+# Terraform / IaC secrets
+*.tfvars
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Docker secrets
+docker-compose.override.yml
+
+# Token / credential files
+*.token
+*.secret
+*credentials*
+!**/templates/*credentials*
+
+# GPG
+*.gpg
+secring.*
+
+# Kubeconfig
+kubeconfig
+.kube/
+
+# ===================================
+# 🔒 SECURITY — Scanning & Reports
+# ===================================
+trivy-results.sarif
+*.sarif
+security-report.*
+audit-report.*
+vulnerability-report.*
+
+# ===================================
+# 🔒 SECURITY — Logs (may contain PII)
+# ===================================
+*.log
+logs/
+!automation/scripts/*.log
+
+# ===================================
+# Misc
+# ===================================
+coverage/
+.nyc_output/
+*.tgz
+npm-debug.log*
