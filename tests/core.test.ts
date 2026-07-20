@@ -37,6 +37,29 @@ describe("Core Logic Modules", () => {
       expect(steps[0].agentName).toBe("Planner");
       expect(steps[6].agentName).toBe("Documentation");
     });
+
+    it("should decompose requirements into a hierarchical subtask tree", () => {
+      const orchestrator = new Orchestrator(ROOT);
+      const rootTask = orchestrator.decomposeTask("Implementar MFA");
+      expect(rootTask).toBeDefined();
+      expect(rootTask.id).toBe("root");
+      expect(rootTask.subtasks).toBeDefined();
+      expect(rootTask.subtasks?.length).toBe(3);
+      expect(rootTask.subtasks?.[0].subtasks?.length).toBe(2);
+    });
+
+    it("should execute hierarchical subtask pipeline successfully and aggregate outputs", async () => {
+      const orchestrator = new Orchestrator(ROOT);
+      const resultTree = await orchestrator.executeHierarchicalPipeline("Implementar Auth MFA");
+      expect(resultTree.status).toBe("completed");
+      expect(resultTree.outputArtifacts).toBeDefined();
+      // Verificando se os artefatos de saída do Developer e DevOps foram agregados ao root
+      expect(resultTree.outputArtifacts["Código"]).toBeDefined();
+      expect(resultTree.outputArtifacts["Configuração CI/CD"]).toBeDefined();
+      // Verificando se os logs dos subagentes foram agregados ao log principal do root
+      expect(resultTree.log.some(line => line.includes("🤖 Starting Agent: Planner"))).toBe(true);
+      expect(resultTree.log.some(line => line.includes("🤖 Starting Agent: DevOps"))).toBe(true);
+    });
   });
 
   describe("TemplateEngine", () => {

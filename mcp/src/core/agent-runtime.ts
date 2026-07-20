@@ -19,6 +19,18 @@ export interface PipelineStepResult {
   log: string[];
 }
 
+export interface TaskNode {
+  id: string;
+  name: string;
+  assignedAgent: string;
+  status: 'pending' | 'in_progress' | 'completed' | 'failed';
+  inputArtifacts: Record<string, string>;
+  outputArtifacts: Record<string, string>;
+  log: string[];
+  subtasks?: TaskNode[];
+}
+
+
 export class AgentRuntime {
   private profiles: Record<string, AgentProfile> = {};
 
@@ -228,4 +240,180 @@ export class Orchestrator {
 
     return results;
   }
+
+  /**
+   * Decomposes a high-level requirement into a hierarchical subtask tree.
+   */
+  public decomposeTask(requirements: string): TaskNode {
+    return {
+      id: "root",
+      name: `Tarefa Principal: ${requirements}`,
+      assignedAgent: "Planner",
+      status: "pending",
+      inputArtifacts: { "Requisitos do usuário": requirements },
+      outputArtifacts: {},
+      log: [],
+      subtasks: [
+        {
+          id: "sub-1",
+          name: "Fase de Planejamento e Design",
+          assignedAgent: "Planner",
+          status: "pending",
+          inputArtifacts: { "Requisitos do usuário": requirements },
+          outputArtifacts: {},
+          log: [],
+          subtasks: [
+            {
+              id: "sub-1-1",
+              name: "Definir Requisitos e Fluxos",
+              assignedAgent: "Planner",
+              status: "pending",
+              inputArtifacts: { "Requisitos do usuário": requirements },
+              outputArtifacts: {},
+              log: []
+            },
+            {
+              id: "sub-1-2",
+              name: "Projetar Arquitetura e ADRs",
+              assignedAgent: "Architect",
+              status: "pending",
+              inputArtifacts: { "Plano de desenvolvimento": "Gerado pela etapa 1.1" },
+              outputArtifacts: {},
+              log: []
+            }
+          ]
+        },
+        {
+          id: "sub-2",
+          name: "Fase de Desenvolvimento e Validação",
+          assignedAgent: "Developer",
+          status: "pending",
+          inputArtifacts: {},
+          outputArtifacts: {},
+          log: [],
+          subtasks: [
+            {
+              id: "sub-2-1",
+              name: "Implementar Código e Testes Unitários",
+              assignedAgent: "Developer",
+              status: "pending",
+              inputArtifacts: { "ADR": "Gerada pela etapa 1.2" },
+              outputArtifacts: {},
+              log: []
+            },
+            {
+              id: "sub-2-2",
+              name: "Revisão de Código e Boas Práticas",
+              assignedAgent: "Reviewer",
+              status: "pending",
+              inputArtifacts: {},
+              outputArtifacts: {},
+              log: []
+            },
+            {
+              id: "sub-2-3",
+              name: "Garantia de Qualidade (QA)",
+              assignedAgent: "QA",
+              status: "pending",
+              inputArtifacts: {},
+              outputArtifacts: {},
+              log: []
+            }
+          ]
+        },
+        {
+          id: "sub-3",
+          name: "Fase de Deploy e Documentação",
+          assignedAgent: "DevOps",
+          status: "pending",
+          inputArtifacts: {},
+          outputArtifacts: {},
+          log: [],
+          subtasks: [
+            {
+              id: "sub-3-1",
+              name: "Configurar Pipelines e Automação",
+              assignedAgent: "DevOps",
+              status: "pending",
+              inputArtifacts: {},
+              outputArtifacts: {},
+              log: []
+            },
+            {
+              id: "sub-3-2",
+              name: "Gerar Documentação e Guias",
+              assignedAgent: "Documentation",
+              status: "pending",
+              inputArtifacts: {},
+              outputArtifacts: {},
+              log: []
+            }
+          ]
+        }
+      ]
+    };
+  }
+
+  /**
+   * Recursively executes a hierarchical TaskNode.
+   */
+  public async executeHierarchicalTask(task: TaskNode, parentArtifacts: Record<string, string> = {}): Promise<TaskNode> {
+    task.status = "in_progress";
+    task.log.push(`[${task.id}] Iniciando tarefa: "${task.name}" executada por ${task.assignedAgent}`);
+
+    // Mesclar artefatos recebidos com os do próprio nó
+    task.inputArtifacts = { ...parentArtifacts, ...task.inputArtifacts };
+
+    if (task.subtasks && task.subtasks.length > 0) {
+      task.log.push(`[${task.id}] Decomposta em ${task.subtasks.length} subtarefas.`);
+      let sharedContext = { ...task.inputArtifacts };
+
+      for (const sub of task.subtasks) {
+        // Executar a subtarefa com o contexto acumulado
+        const resultSub = await this.executeHierarchicalTask(sub, sharedContext);
+        
+        // Propagar as saídas da subtarefa para o contexto compartilhado das próximas
+        sharedContext = { ...sharedContext, ...resultSub.outputArtifacts };
+        
+        // Acumular artefatos e logs no nó pai
+        task.outputArtifacts = { ...task.outputArtifacts, ...resultSub.outputArtifacts };
+        task.log.push(...resultSub.log.map(line => `  ${line}`));
+      }
+      
+      task.status = "completed";
+      task.log.push(`[${task.id}] Concluídas todas as subtarefas de: "${task.name}"`);
+    } else {
+      // Executar o agente folha
+      try {
+        const agentResult = this.runtime.runAgent(task.assignedAgent, task.inputArtifacts);
+        task.outputArtifacts = agentResult.outputArtifacts;
+        task.log.push(...agentResult.log);
+        task.status = "completed";
+      } catch (err: any) {
+        task.status = "failed";
+        task.log.push(`❌ Erro ao executar agente ${task.assignedAgent}: ${err.message}`);
+        throw err;
+      }
+    }
+
+    return task;
+  }
+
+  /**
+   * Generates, executes, and logs a hierarchical subtask pipeline.
+   */
+  public async executeHierarchicalPipeline(initialRequirements: string): Promise<TaskNode> {
+    const rootTask = this.decomposeTask(initialRequirements);
+    const executionLogsDir = join(this.rootDir, ".context/runtime/workflows");
+    mkdirSync(executionLogsDir, { recursive: true });
+
+    const resultTree = await this.executeHierarchicalTask(rootTask);
+
+    // Salvar o relatório da execução hierárquica nos logs do runtime
+    const reportPath = join(executionLogsDir, `hierarchical-execution-${Date.now()}.json`);
+    writeFileSync(reportPath, JSON.stringify(resultTree, null, 2), "utf-8");
+
+    return resultTree;
+  }
 }
+

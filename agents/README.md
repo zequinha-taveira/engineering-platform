@@ -238,3 +238,7 @@ Planner → Architect → Developer → Reviewer → QA → DevOps → Documenta
 | Reviewer | QA | Código revisado |
 | QA | DevOps | Testes passando |
 | DevOps | Documentation | Deploy realizado |
+
+## Evolução e Futuro: Subagentes & Subtarefas
+Para entender como estender este catálogo para suportar hierarquias de agentes complexos, delegação dinâmica de tarefas e engenharia avançada de contexto com modelos nativos (raiz), consulte o [Capítulo 12: Temas Para o Futuro da Trilha](../interactive-tutorial/capitulo-12-futuro-da-trilha.md).
+

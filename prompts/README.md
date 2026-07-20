@@ -6,6 +6,9 @@
 
 O Prompt System fornece templates reutilizáveis e um processo estruturado para criar prompts de alta qualidade que geram resultados consistentes e acionáveis.
 
+> [!NOTE]
+> Em resumo: um bom sistema de Prompt Engineering organiza contexto, responsabilidades, artefatos e processos para que cada agente execute apenas a parte do trabalho que lhe cabe, mantendo alinhamento com a arquitetura e os padrões do projeto.
+
 ## Princípios
 
 1. **Templates sobre manuais** — Prompts são derivados de templates, não escritos do zero
@@ -18,6 +21,7 @@ O Prompt System fornece templates reutilizáveis e um processo estruturado para 
 ```
 prompts/
 ├── README.md              # Este arquivo
+├── context-summary.md     # Resumo de contexto consolidado para injeção em prompts
 ├── templates/             # Templates por categoria
 │   ├── specification.md   # Template para specs
 │   ├── code-review.md     # Template para reviews
