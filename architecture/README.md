@@ -4,7 +4,7 @@
 
 ## Visão Geral
 
-A Engineering Platform é uma plataforma modular baseada em documentos, onde cada componente é definido por contratos, especificações e padrões versionados.
+A Engineering Platform é uma plataforma modular baseada em documentos, onde cada componente é definido por contratos, especificações e padrões versionados. O motor de execução suporta tanto pipelines lineares sequenciais quanto orquestração hierárquica de subtarefas com subagentes.
 
 ## Diagrama de Arquitetura
 
@@ -18,7 +18,18 @@ A Engineering Platform é uma plataforma modular baseada em documentos, onde cad
 │  ┌────────────────────────────────────────────────┐ │
 │  │  Resources: arch, specs, contracts, standards  │ │
 │  │  Tools: create_spec, generate_prompt, review   │ │
+│  │         create_contract, create_adr, search    │ │
 │  └────────────────────────────────────────────────┘ │
+└──────────────────────┬──────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────┐
+│              Orchestration Engine                     │
+│  ┌──────────────────┐  ┌──────────────────────────┐ │
+│  │  AgentRuntime    │  │  Orchestrator            │ │
+│  │  (7 agents)      │  │  ├ executePipeline()     │ │
+│  │                  │  │  ├ decomposeTask()       │ │
+│  │                  │  │  └ executeHierarchical() │ │
+│  └──────────────────┘  └──────────────────────────┘ │
 └──────────────────────┬──────────────────────────────┘
                        │
 ┌──────────────────────▼──────────────────────────────┐
@@ -38,8 +49,12 @@ A Engineering Platform é uma plataforma modular baseada em documentos, onde cad
 ## Componentes
 
 ### Camada de Interface
-- **MCP Server** — Ponto de entrada para agentes de IA
-- **CLI/Tools** — Ferramentas para desenvolvedores
+- **MCP Server** — Ponto de entrada para agentes de IA (9 resources, 8 tools)
+- **CLI/Tools** — Ferramentas para desenvolvedores (`run-pipeline`, `run-hierarchical-pipeline`, geradores)
+
+### Camada de Orquestração
+- **AgentRuntime** — Motor de execução que carrega perfis dos 7 agentes e processa cada fase
+- **Orchestrator** — Suporta execução linear (`executePipeline`) e hierárquica (`executeHierarchicalPipeline`) com decomposição em `TaskNode`
 
 ### Camada Core
 - **Constitution** — Identidade técnica e governança
@@ -47,12 +62,12 @@ A Engineering Platform é uma plataforma modular baseada em documentos, onde cad
 - **Templates** — Artefatos reutilizáveis
 
 ### Camada de Conteúdo
-- **Prompts** — Sistema de geração de prompts
-- **Agents** — Catálogo de agentes
-- **Contracts** — Contratos de módulos
+- **Prompts** — Sistema de geração de prompts com contexto consolidado
+- **Agents** — Catálogo de 7 agentes especializados
+- **Contracts** — Contratos de módulos com validação JSON Schema
 
 ### Camada de Conhecimento
-- **Knowledge** — Base de conhecimento
+- **Knowledge** — Base de conhecimento (glossário, padrões, decisões)
 - **Playbooks** — Guias operacionais
 - **Automation** — Scripts e CI/CD
 

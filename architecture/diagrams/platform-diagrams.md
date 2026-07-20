@@ -11,6 +11,12 @@ graph TB
         CLI["CLI Tools"]
     end
 
+    subgraph Orchestration["Camada de Orquestração"]
+        RUNTIME["AgentRuntime<br/>7 Agentes Especializados"]
+        ORCH["Orchestrator<br/>Pipeline Linear + Hierárquico"]
+        TASK["TaskNode Tree<br/>Decomposição de Subtarefas"]
+    end
+
     subgraph Core["Camada Core"]
         CONST["Constitution<br/>Princípios & Governança"]
         STD["Standards<br/>Padrões Técnicos"]
@@ -20,7 +26,7 @@ graph TB
 
     subgraph Content["Camada de Conteúdo"]
         PROMPT["Prompt System<br/>Templates & Gerador"]
-        AGENT["Agent Catalog<br/>8 Agentes Especializados"]
+        AGENT["Agent Catalog<br/>Perfis & Responsabilidades"]
         CONTRACT["Contracts<br/>Interfaces de Módulos"]
         SPEC["Specifications<br/>Funcionalidades"]
     end
@@ -30,6 +36,17 @@ graph TB
         PB["Playbooks<br/>Guias Operacionais"]
         AUTO["Automation<br/>CI/CD, Scripts"]
     end
+
+    MCP --> ORCH
+    CLI --> ORCH
+    ORCH --> RUNTIME
+    ORCH --> TASK
+    TASK --> RUNTIME
+
+    RUNTIME --> AGENT
+    RUNTIME --> PROMPT
+    RUNTIME --> STD
+    RUNTIME --> CONTRACT
 
     MCP --> CONST
     MCP --> STD
@@ -74,7 +91,7 @@ flowchart LR
     style L fill:#2196F3,color:#fff
 ```
 
-## Pipeline de Agentes
+## Pipeline Linear de Agentes
 
 ```mermaid
 sequenceDiagram
@@ -110,6 +127,49 @@ sequenceDiagram
     Doc->>U: Documentação atualizada
 ```
 
+## Orquestração Hierárquica de Subagentes
+
+```mermaid
+graph TD
+    ROOT["🎯 Tarefa Principal<br/>(Planner)"]
+
+    subgraph Phase1["Fase 1 — Planejamento & Design"]
+        SUB1A["📋 Definir Requisitos<br/>(Planner)"]
+        SUB1B["🏗️ Projetar Arquitetura<br/>(Architect)"]
+    end
+
+    subgraph Phase2["Fase 2 — Desenvolvimento & Validação"]
+        SUB2A["💻 Implementar Código<br/>(Developer)"]
+        SUB2B["🔍 Revisão de Código<br/>(Reviewer)"]
+        SUB2C["🧪 Garantia de Qualidade<br/>(QA)"]
+    end
+
+    subgraph Phase3["Fase 3 — Deploy & Documentação"]
+        SUB3A["⚙️ Configurar Pipelines<br/>(DevOps)"]
+        SUB3B["📚 Gerar Documentação<br/>(Documentation)"]
+    end
+
+    ROOT --> Phase1
+    ROOT --> Phase2
+    ROOT --> Phase3
+
+    SUB1A -->|"Plano"| SUB1B
+    SUB1B -->|"ADR + Design"| SUB2A
+    SUB2A -->|"Código"| SUB2B
+    SUB2B -->|"Código revisado"| SUB2C
+    SUB2C -->|"Testes passando"| SUB3A
+    SUB3A -->|"Deploy"| SUB3B
+
+    style ROOT fill:#FF9800,color:#fff
+    style SUB1A fill:#4CAF50,color:#fff
+    style SUB1B fill:#4CAF50,color:#fff
+    style SUB2A fill:#2196F3,color:#fff
+    style SUB2B fill:#2196F3,color:#fff
+    style SUB2C fill:#2196F3,color:#fff
+    style SUB3A fill:#9C27B0,color:#fff
+    style SUB3B fill:#9C27B0,color:#fff
+```
+
 ## Estrutura do MCP Server
 
 ```mermaid
@@ -124,7 +184,7 @@ graph LR
         TOOLS["Tools Handler"]
     end
 
-    subgraph Resources["Resources (8)"]
+    subgraph Resources["Resources (9)"]
         R1["platform://architecture"]
         R2["platform://constitution"]
         R3["platform://standards"]
@@ -133,14 +193,18 @@ graph LR
         R6["platform://prompts"]
         R7["platform://agents"]
         R8["platform://knowledge"]
+        R9["platform://glossary"]
     end
 
-    subgraph Tools["Tools (5)"]
+    subgraph Tools["Tools (8)"]
         T1["create_spec"]
         T2["create_plan"]
         T3["generate_prompt"]
         T4["review_code"]
         T5["validate_project"]
+        T6["create_contract"]
+        T7["create_adr"]
+        T8["search_knowledge"]
     end
 
     REQ --> MCP
@@ -164,3 +228,4 @@ flowchart TD
 
     F --> I["CI/CD verifica<br/>em cada PR"]
 ```
+
